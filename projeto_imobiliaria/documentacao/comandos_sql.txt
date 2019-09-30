@@ -1,0 +1,83 @@
+﻿/*CRIAÇÃO DE BANCO DE DADOS*/
+CREATE DATABASE db_imobiliaria;
+
+/*ACESSANDO O BANCO*/
+USE db_imobiliaria;
+
+/*CRIAÇÃO DE TABELAS*/
+CREATE TABLE tbl_proprietario (
+	id_proprietario INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome_proprietario VARCHAR(100) NOT NULL,
+	cpf_proprietario VARCHAR(30) NOT NULL,
+	telefone_proprietario VARCHAR(20) NOT NULL,
+	data_nascimento DATE NOT NULL,
+	id_endereco INTEGER NOT NULL,
+	data_cadastro_proprietario DATE NOT NULL,
+	data_exclusao_proprietario DATE NULL
+);
+
+CREATE TABLE tbl_imovel (
+	id_imovel INTEGER PRIMARY KEY AUTO_INCREMENT,
+	matricula INTEGER NOT NULL UNIQUE,
+	id_endereco_imovel INTEGER NOT NULL,
+	tipo VARCHAR(20) NOT NULL,
+	id_proprietario INTEGER NOT NULL,
+	data_cadastro_imovel DATE NOT NULL,
+	data_exclusao_imovel DATE NULL
+);
+
+CREATE TABLE tbl_cliente (
+	id_cliente INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome_cliente VARCHAR(100) NOT NULL,
+	cpf_cliente VARCHAR(30) NOT NULL,
+	idade VARCHAR(10) NOT NULL,
+	telefone_cliente VARCHAR(20) NOT NULL,
+	data_cadastro_cliente DATE NOT NULL,
+	data_exclusao_cliente DATE NULL
+);
+
+CREATE TABLE tbl_imovel_cliente (
+	id_cliente INTEGER NOT NULL,
+	id_imovel INTEGER NOT NULL,
+	cod_contrato INTEGER NOT NULL,
+	data_inicio DATE NOT NULL,
+	data_final DATE NULL
+);
+
+CREATE TABLE tbl_endereco (
+	id_endereco INTEGER PRIMARY KEY AUTO_INCREMENT,
+	logradouro VARCHAR(200) NOT NULL,
+	numero VARCHAR(10) NOT NULL,
+	cidade VARCHAR(100) NOT NULL,
+	id_estado INTEGER NOT NULL,
+	cep VARCHAR(15) NOT NULL
+);
+
+CREATE TABLE tbl_estado (
+	id_estado INTEGER PRIMARY KEY AUTO_INCREMENT,
+	nome VARCHAR(200) NOT NULL,
+	sigla CHAR(2) NOT NULL,
+	capital VARCHAR(100) NOT NULL,
+	pais VARCHAR(50)
+);
+
+/*DEFINIÇÃO DE CHAVES ESTRANGEIRAS*/
+ALTER TABLE tbl_proprietario ADD CONSTRAINT fk_id_endereco_tblproprietario FOREIGN KEY(id_endereco) REFERENCES tbl_endereco(id_endereco);
+
+ALTER TABLE tbl_imovel ADD CONSTRAINT fk_id_endereco_tblimovel FOREIGN KEY(id_endereco_imovel) REFERENCES tbl_endereco(id_endereco);
+
+ALTER TABLE tbl_imovel ADD CONSTRAINT fk_id_proprietario_tblimovel FOREIGN KEY(id_proprietario) REFERENCES tbl_proprietario(id_proprietario);
+
+ALTER TABLE tbl_imovel_cliente ADD CONSTRAINT fk_id_cliente_tblimovelcliente FOREIGN KEY(id_cliente) REFERENCES tbl_cliente(id_cliente);
+
+ALTER TABLE tbl_imovel_cliente ADD CONSTRAINT fk_id_imovel_tblimovelcliente FOREIGN KEY(id_imovel) REFERENCES tbl_imovel(id_imovel);
+
+ALTER TABLE tbl_endereco ADD CONSTRAINT fk_id_estado_tblestado FOREIGN KEY(id_estado) REFERENCES tbl_estado(id_estado);
+
+/*PREENCHIMENTO DE ESTADOS*/
+INSERT INTO tbl_estado (nome, sigla, capital, pais) 
+VALUES
+('São Paulo', 'SP', 'São Paulo', 'Brasil'),
+('Minas Gerais', 'MG', 'Belo Horizonte', 'Brasil'),
+('Bahia', 'BH', 'Salvador', 'Brasil');
+
